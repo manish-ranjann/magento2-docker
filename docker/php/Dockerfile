@@ -43,10 +43,11 @@ RUN echo "realpath_cache_ttl=7200" > /usr/local/etc/php/conf.d/realpath_cache_tt
 #RUN echo "default_socket_timeout=900" > /usr/local/etc/php/conf.d/default_socket_timeout.ini
 
 # Install xdebug extension
- RUN pecl install xdebug && docker-php-ext-enable xdebug \
-    && echo "xdebug.mode=develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN pecl install xdebug && docker-php-ext-enable xdebug \
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.mode=develop,debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install Composer
 RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
@@ -55,6 +56,10 @@ RUN cd /usr/src && mv composer.phar /usr/bin/composer
 # Configure MailHog
 RUN go get github.com/mailhog/mhsendmail
 RUN echo 'sendmail_path="/root/go/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /usr/local/etc/php/conf.d/mail.ini
+
+# Install Magento-CLI
+RUN curl -sS https://accounts.magento.cloud/cli/installer | php
+RUN export PATH=$PATH:$HOME/.magento-cloud/bin
 
 # Install n98-magerun2
 #RUN cd /usr/local/bin && curl -sS -O https://files.magerun.net/n98-magerun2-latest.phar

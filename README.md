@@ -32,7 +32,7 @@ Magento 2.4.x Docker Setup:
 2. Clone magento2-docker repository and Build the docker Images:
 
         * Goto "magento2-docker" folder and and create "magento24" folder(mkdir magento24)
-        * docker-compose build
+        * docker-compose build --no-cache 
         * docker-compose up -d
 
 3. Add System variable in environmental settings ```SHELL=/bin/bash``` (windows)
@@ -74,13 +74,13 @@ Magento 2.4.x Docker Setup:
                                --db-name=mage24_db \
                                --db-user=mage24_user \
                                --db-password=mage24_pass \
-                               --base-url=http://magento24.loc/ \
+                               --base-url=http://magento24.test:8800/ \
                                --backend-frontname=admin \
                                --admin-user=admin \
                                --admin-password=admin123 \
-                               --admin-email=nithincninan@gmail.com \
-                               --admin-firstname=nithin \
-                               --admin-lastname=ninan \
+                               --admin-email=manish.ranjan@outlook.in \
+                               --admin-firstname=manish \
+                               --admin-lastname=ranjan \
                                --language=en_US \
                                --currency=USD \
                                --timezone=America/Chicago \
@@ -118,18 +118,18 @@ Magento 2.4.x Docker Setup:
                 8. Run the cli commands:
                     * php bin/magento setup:upgrade
                     * php bin/magento setup:di:compile
-                    * php -dmemory_limit=6G bin/magento setup:static-content:deploy -f
+                    * php -d memory_limit=6G bin/magento setup:static-content:deploy -f
                     * chown -R www-data:www-data .
           		    
 ```        
 
-6. Configure your hosts file: 127.0.0.1 magento24.loc 
+6. Configure your hosts file: 127.0.0.1 magento24.test 
    1. In windows:-  c:\Windows\System32\Drivers\etc\hosts.
    2. Mac/Ubuntu:-  /etc/hosts
 
-7. Open http://magento24.loc/ 
+7. Open http://magento24.test:8800/ 
 
-8. Open http://magento24.loc/admin/
+8. Open http://magento24.test:8800/admin/
 
 9. MailHog:- You are able to see all the emails from docker(Magento Instance) on http://localhost:8025/
 
@@ -153,15 +153,15 @@ and then pull again. As it is public repo you shouldn't need to login
  
          
          map $http_host $MAGE_RUN_CODE {
-            magento24-second.loc second_website_code;
-            magento24.loc base;
+            magento24-second.test second_website_code;
+            magento24.test base;
          }
          upstream fastcgi_backend {
               server php:9000;
           }
           server {
               listen 80;
-              server_name magento24.loc magento24-second.loc;
+              server_name magento24.test magento24-second.test;
               set $MAGE_ROOT /var/www/magento24;
               set $MAGE_MODE developer;
               fastcgi_param  MAGE_MODE $MAGE_MODE;
@@ -177,7 +177,7 @@ and then pull again. As it is public repo you shouldn't need to login
           }
           
        
-  10.3). Configure your hosts file: 127.0.0.1 magento24.loc magento24-second.loc <br />
+  10.3). Configure your hosts file: 127.0.0.1 magento24.test magento24-second.test <br />
             1. In windows:-  c:\Windows\System32\Drivers\etc\hosts. <br />
             2. Mac/Ubuntu:-  /etc/hosts     <br />
   
